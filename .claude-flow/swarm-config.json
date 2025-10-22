@@ -1,0 +1,353 @@
+{
+  "version": "1.0.0",
+  "project": "Bite Size Academic",
+  "swarm_type": "claude-flow",
+  "last_updated": "2024-01-18T10:00:00Z",
+  "orchestration": {
+    "primary_coordinator": "claude-code",
+    "execution_pattern": "sequential_with_parallel_tasks",
+    "error_handling": "graceful_degradation_with_fallbacks"
+  },
+  "agents": [
+    {
+      "name": "content_curation",
+      "type": "general-purpose",
+      "responsibilities": [
+        "Academic source monitoring",
+        "Content quality assessment",
+        "Relevance scoring",
+        "Diversity verification"
+      ],
+      "tools": ["http", "rss-parser", "crossref-rest", "filesystem"],
+      "execution_schedule": "daily 09:00 UTC",
+      "priority": "high",
+      "dependencies": []
+    },
+    {
+      "name": "content_generation",
+      "type": "general-purpose",
+      "responsibilities": [
+        "Research summarization",
+        "Why-this-matters analysis",
+        "Reading time estimation",
+        "Cross-field connection identification"
+      ],
+      "tools": ["claude-code", "filesystem", "process"],
+      "execution_schedule": "daily 10:00 UTC",
+      "priority": "high",
+      "dependencies": ["content_curation"]
+    },
+    {
+      "name": "audio_production",
+      "type": "general-purpose",
+      "responsibilities": [
+        "Script generation from summaries",
+        "TTS processing (mock for MVP)",
+        "Audio metadata creation",
+        "RSS feed generation"
+      ],
+      "tools": ["claude-code", "aws", "filesystem", "process"],
+      "execution_schedule": "daily 11:00 UTC",
+      "priority": "medium",
+      "dependencies": ["content_generation"]
+    },
+    {
+      "name": "email_delivery",
+      "type": "general-purpose",
+      "responsibilities": [
+        "Email template rendering",
+        "Personalization",
+        "Delivery orchestration",
+        "Delivery monitoring"
+      ],
+      "tools": ["resend", "react-email", "filesystem"],
+      "execution_schedule": "friday 10:00 UTC",
+      "priority": "high",
+      "dependencies": ["content_generation"]
+    },
+    {
+      "name": "quality_assurance",
+      "type": "general-purpose",
+      "responsibilities": [
+        "Content validation",
+        "Link verification",
+        "Accessibility testing",
+        "Performance monitoring"
+      ],
+      "tools": ["playwright", "lighthouse", "process", "filesystem"],
+      "execution_schedule": "daily 14:00 UTC",
+      "priority": "medium",
+      "dependencies": ["email_delivery", "audio_production"]
+    }
+  ],
+  "data_flow": {
+    "pipelines": [
+      {
+        "name": "weekly_digest_pipeline",
+        "description": "Generate and deliver weekly research digest",
+        "stages": [
+          {
+            "stage": "source_discovery",
+            "agent": "content_curation",
+            "input": "academic_api_endpoints",
+            "output": "raw_articles",
+            "processing_time": "15-30 minutes"
+          },
+          {
+            "stage": "content_filtering",
+            "agent": "content_curation",
+            "input": "raw_articles",
+            "output": "filtered_articles",
+            "processing_time": "10-20 minutes"
+          },
+          {
+            "stage": "summarization",
+            "agent": "content_generation",
+            "input": "filtered_articles",
+            "output": "summarized_articles",
+            "processing_time": "20-40 minutes"
+          },
+          {
+            "stage": "digest_composition",
+            "agent": "content_generation",
+            "input": "summarized_articles",
+            "output": "weekly_digest",
+            "processing_time": "10-15 minutes"
+          },
+          {
+            "stage": "email_rendering",
+            "agent": "email_delivery",
+            "input": "weekly_digest",
+            "output": "rendered_emails",
+            "processing_time": "5-10 minutes"
+          },
+          {
+            "stage": "email_delivery",
+            "agent": "email_delivery",
+            "input": "rendered_emails",
+            "output": "delivered_emails",
+            "processing_time": "30-60 minutes"
+          }
+        ],
+        "total_processing_time": "90-175 minutes",
+        "retry_policy": {
+          "max_retries": 3,
+          "backoff_strategy": "exponential",
+          "retry_delay": "5 minutes"
+        }
+      },
+      {
+        "name": "podcast_pipeline",
+        "description": "Generate podcast episodes for premium subscribers",
+        "stages": [
+          {
+            "stage": "script_generation",
+            "agent": "content_generation",
+            "input": "weekly_digest",
+            "output": "podcast_script",
+            "processing_time": "15-25 minutes"
+          },
+          {
+            "stage": "audio_synthesis",
+            "agent": "audio_production",
+            "input": "podcast_script",
+            "output": "audio_file",
+            "processing_time": "10-20 minutes (mock: 2-5 minutes)"
+          },
+          {
+            "stage": "metadata_creation",
+            "agent": "audio_production",
+            "input": "audio_file, podcast_script",
+            "output": "episode_metadata",
+            "processing_time": "2-5 minutes"
+          },
+          {
+            "stage": "rss_generation",
+            "agent": "audio_production",
+            "input": "episode_metadata",
+            "output": "rss_feed",
+            "processing_time": "1-3 minutes"
+          }
+        ],
+        "total_processing_time": "28-53 minutes",
+        "retry_policy": {
+          "max_retries": 2,
+          "backoff_strategy": "linear",
+          "retry_delay": "10 minutes"
+        }
+      }
+    ]
+  },
+  "service_integrations": {
+    "mock_services": {
+      "enabled": true,
+      "services": [
+        {
+          "name": "email_service",
+          "mock_type": "local_file_storage",
+          "real_service": "resend",
+          "configuration": {
+            "storage_path": "./storage/mock-emails",
+            "delivery_simulation": true,
+            "analytics_simulation": true
+          }
+        },
+        {
+          "name": "tts_service",
+          "mock_type": "silent_audio_generation",
+          "real_service": "aws_polly",
+          "configuration": {
+            "audio_format": "mp3",
+            "voice_mapping": {
+              "life-sciences": "Joanna",
+              "ai-computing": "Matthew",
+              "humanities": "Joanna",
+              "policy-governance": "Matthew",
+              "climate-earth": "Joanna"
+            }
+          }
+        },
+        {
+          "name": "academic_apis",
+          "mock_type": "fixture_data",
+          "real_services": ["arxiv", "crossref", "pubmed", "semantic_scholar"],
+          "configuration": {
+            "fixture_path": "./fixtures/academic-sources",
+            "update_frequency": "weekly",
+            "data_validation": true
+          }
+        },
+        {
+          "name": "billing_service",
+          "mock_type": "subscription_simulation",
+          "real_service": "stripe",
+          "configuration": {
+            "mock_plans": ["free", "premium"],
+            "payment_simulation": true,
+            "webhook_simulation": true
+          }
+        }
+      ]
+    }
+  },
+  "error_handling": {
+    "strategies": {
+      "service_unavailable": {
+        "action": "use_cached_content",
+        "fallback": "previous_week_content_with_notice",
+        "notification": "admin_alert"
+      },
+      "content_insufficient": {
+        "action": "expand_search_criteria",
+        "fallback": "include_older_content",
+        "notification": "quality_alert"
+      },
+      "audio_generation_failed": {
+        "action": "skip_audio_for_week",
+        "fallback": "text_only_email",
+        "notification": "user_notification"
+      },
+      "email_delivery_failed": {
+        "action": "retry_with_alternative_service",
+        "fallback": "queue_for_next_cycle",
+        "notification": "delivery_monitoring"
+      }
+    },
+    "monitoring": {
+      "health_checks": {
+        "schedule": "every 15 minutes",
+        "endpoints": ["/health", "/api/status"],
+        "alerts": ["downtime", "performance_degradation", "error_rate_increase"]
+      },
+      "quality_metrics": {
+        "content_relevance_threshold": 75,
+        "email_delivery_threshold": 95,
+        "user_engagement_threshold": 40,
+        "processing_time_threshold": "3 hours"
+      }
+    }
+  },
+  "performance_optimization": {
+    "caching": {
+      "content_cache": {
+        "ttl": "24 hours",
+        "storage": "filesystem",
+        "cache_keys": ["summarized_articles", "rendered_templates"]
+      },
+      "api_cache": {
+        "ttl": "1 hour",
+        "storage": "memory",
+        "cache_keys": ["academic_api_responses", "user_preferences"]
+      }
+    },
+    "parallel_processing": {
+      "enabled_stages": ["source_discovery", "email_delivery"],
+      "max_concurrent_tasks": 5,
+      "resource_allocation": {
+        "content_curation": "high_priority",
+        "content_generation": "high_priority",
+        "audio_production": "medium_priority",
+        "email_delivery": "high_priority"
+      }
+    },
+    "resource_management": {
+      "memory_limit": "2GB",
+      "cpu_limit": "80%",
+      "disk_space_threshold": "10GB free",
+      "network_rate_limit": "100 requests/minute"
+    }
+  },
+  "deployment": {
+    "environment": "development",
+    "infrastructure": {
+      "runtime": "node.js",
+      "platform": "local_development",
+      "database": "file_system",
+      "file_storage": "local",
+      "queue_system": "in_memory"
+    },
+    "scaling": {
+      "horizontal_scaling": false,
+      "load_balancing": false,
+      "auto_scaling": false
+    },
+    "security": {
+      "authentication": "mock",
+      "authorization": "basic",
+      "data_encryption": "file_level",
+      "api_rate_limiting": true
+    }
+  },
+  "observability": {
+    "logging": {
+      "level": "info",
+      "format": "json",
+      "destinations": ["file", "console"],
+      "retention": "30 days",
+      "categories": ["content_generation", "email_delivery", "error_tracking", "performance"]
+    },
+    "metrics": {
+      "collection": true,
+      "interval": "1 minute",
+      "storage": "local_files",
+      "key_metrics": [
+        "content_processing_time",
+        "email_delivery_rate",
+        "user_engagement",
+        "error_rate",
+        "system_performance"
+      ]
+    },
+    "tracing": {
+      "enabled": true,
+      "span_format": "json",
+      "sampling_rate": 1.0,
+      "key_operations": [
+        "article_processing",
+        "digest_generation",
+        "email_sending",
+        "audio_generation"
+      ]
+    }
+  }
+}

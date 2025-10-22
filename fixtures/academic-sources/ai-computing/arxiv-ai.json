@@ -1,0 +1,175 @@
+{
+  "source": "arxiv",
+  "field": "ai-computing",
+  "lastUpdated": "2024-01-18T10:00:00Z",
+  "articles": [
+    {
+      "id": "arxiv-2024-001",
+      "title": "Large Language Models Show Emergent Mathematical Reasoning Abilities",
+      "authors": [
+        {
+          "id": "author_010",
+          "name": "Alex Kumar, PhD",
+          "affiliation": "Google Research"
+        },
+        {
+          "id": "author_011",
+          "name": "Lisa Zhang, PhD",
+          "affiliation": "OpenAI"
+        },
+        {
+          "id": "author_012",
+          "name": "Michael Johnson, PhD",
+          "affiliation": "Stanford AI Lab"
+        }
+      ],
+      "venue": "arXiv.org",
+      "venueType": "preprint",
+      "abstract": "We demonstrate that scale alone can produce unexpected mathematical reasoning capabilities in language models without explicit training. Our analysis of models ranging from 1B to 175B parameters reveals a sharp phase transition in mathematical problem-solving ability that emerges around 70B parameters. Models below this threshold perform at chance level on complex mathematical reasoning tasks, while those above it solve 82% of problems correctly. We identify three distinct reasoning capabilities that emerge sequentially: arithmetic operations, algebraic manipulation, and abstract mathematical reasoning. The emergent abilities generalize across mathematical domains and are robust to variations in problem formatting. Notably, these capabilities appear without any specific mathematical training data, suggesting they arise from the model's internal representations of language structure and logic.",
+      "url": "https://arxiv.org/abs/2401.12345",
+      "publishedAt": "2024-01-16T18:30:00Z",
+      "field": "ai-computing",
+      "subfield": "Artificial Intelligence",
+      "tags": ["llm", "emergent-abilities", "mathematical-reasoning", "scaling-laws", "language-models"],
+      "topics": ["large language models", "emergent abilities", "mathematical reasoning", "scaling laws", "cognitive capabilities"],
+      "quality": "breakthrough",
+      "relevanceScore": 96,
+      "impactScore": 94,
+      "qualityScore": 91,
+      "noveltyScore": 93,
+      "openAccess": true,
+      "arxivId": "2401.12345",
+      "summary": "Google Research and OpenAI discovered that language models suddenly develop mathematical reasoning abilities around 70B parameters, without specific training.",
+      "keyFindings": [
+        "Sharp phase transition occurs at 70B parameters",
+        "Three distinct reasoning capabilities emerge sequentially",
+        "82% accuracy on complex mathematical problems",
+        "Abilities generalize across mathematical domains"
+      ],
+      "methodology": "Model scaling experiments, mathematical reasoning benchmarks, capability analysis",
+      "limitations": "Preprint study, requires peer review, computational resource intensive",
+      "whyThisMatters": "This challenges our understanding of how reasoning emerges in AI systems and has profound implications for AGI development, suggesting that reasoning capabilities may be an emergent property of scale rather than requiring specialized training.",
+      "readingTime": 8,
+      "source": "arxiv",
+      "fetchedAt": "2024-01-18T10:00:00Z",
+      "processedAt": "2024-01-18T10:05:00Z",
+      "processingStatus": "completed",
+      "relatedArticles": [],
+      "citationContext": "This preprint has been mentioned in 15 blog posts and cited by 3 subsequent papers",
+      "isMockData": true,
+      "mockDataSource": "arxiv-ai-fixture"
+    },
+    {
+      "id": "arxiv-2024-002",
+      "title": "Efficient Fine-Tuning of Pretrained Models for Domain Adaptation",
+      "authors": [
+        {
+          "id": "author_013",
+          "name": "Sarah Chen, PhD",
+          "affiliation": "Microsoft Research"
+        },
+        {
+          "id": "author_014",
+          "name": "David Liu, PhD",
+          "affiliation": "UC Berkeley"
+        },
+        {
+          "id": "author_015",
+          "name": "Emma Wilson, PhD",
+          "affiliation": "Carnegie Mellon University"
+        }
+      ],
+      "venue": "arXiv.org",
+      "venueType": "preprint",
+      "abstract": "We propose a novel parameter-efficient fine-tuning method that adapts large pretrained models to new domains using only 0.1% of trainable parameters. Our approach, called AdaptLayer, introduces lightweight adapter layers that learn domain-specific transformations while preserving the original model's capabilities. Extensive experiments on 12 domains including medical, legal, and scientific texts show that AdaptLayer achieves comparable performance to full fine-tuning while reducing computational costs by three orders of magnitude. The method also enables simultaneous multi-domain adaptation without catastrophic forgetting. We demonstrate that our approach can be combined with other parameter-efficient methods for even greater efficiency gains. Analysis of the learned representations reveals that AdaptLayer captures domain-specific semantic patterns while maintaining general language understanding.",
+      "url": "https://arxiv.org/abs/2401.12346",
+      "publishedAt": "2024-01-15T14:20:00Z",
+      "field": "ai-computing",
+      "subfield": "Natural Language Processing",
+      "tags": ["fine-tuning", "parameter-efficient", "domain-adaptation", "transfer-learning", "model-adaptation"],
+      "topics": ["efficient fine-tuning", "domain adaptation", "adapter layers", "computational efficiency", "multi-domain learning"],
+      "quality": "significant",
+      "relevanceScore": 88,
+      "impactScore": 85,
+      "qualityScore": 87,
+      "noveltyScore": 83,
+      "openAccess": true,
+      "arxivId": "2401.12346",
+      "summary": "Microsoft Research developed AdaptLayer, a fine-tuning method using only 0.1% of parameters while maintaining full fine-tuning performance across 12 domains.",
+      "keyFindings": [
+        "0.1% parameters achieve comparable performance to full fine-tuning",
+        "Three orders of magnitude reduction in computational costs",
+        "Enables simultaneous multi-domain adaptation",
+        "Prevents catastrophic forgetting"
+      ],
+      "methodology": "Adapter layer design, domain adaptation experiments, computational efficiency analysis",
+      "limitations": "Preprint requires peer review, may not generalize to all domains, adapter overhead still present",
+      "whyThisMatters": "This dramatically reduces the computational barriers to adapting large language models for specialized domains, making AI more accessible for organizations with limited resources.",
+      "readingTime": 6,
+      "source": "arxiv",
+      "fetchedAt": "2024-01-18T10:00:00Z",
+      "processedAt": "2024-01-18T10:05:00Z",
+      "processingStatus": "completed",
+      "relatedArticles": [],
+      "citationContext": "This efficient fine-tuning approach has been implemented by 8 research groups",
+      "isMockData": true,
+      "mockDataSource": "arxiv-ai-fixture"
+    },
+    {
+      "id": "arxiv-2024-003",
+      "title": "Quantum Machine Learning Algorithms Outperform Classical Methods on Specific Tasks",
+      "authors": [
+        {
+          "id": "author_016",
+          "name": "James Park, PhD",
+          "affiliation": "IBM Quantum"
+        },
+        {
+          "id": "author_017",
+          "name": "Maria Garcia, PhD",
+          "affiliation": "Google Quantum AI"
+        },
+        {
+          "id": "author_018",
+          "name": "Robert Taylor, PhD",
+          "affiliation": "MIT Quantum Computing Center"
+        }
+      ],
+      "venue": "arXiv.org",
+      "venueType": "preprint",
+      "abstract": "We demonstrate quantum machine learning algorithms that achieve exponential speedup over classical methods on specific classes of problems. Our quantum algorithms leverage quantum superposition and entanglement to process high-dimensional feature spaces more efficiently than classical approaches. We implement these algorithms on existing quantum hardware with up to 127 qubits and demonstrate superior performance on three benchmark tasks: high-dimensional optimization, quantum chemistry simulation, and complex pattern recognition. The quantum approach shows particular advantage when dealing with quantum mechanical data, where it achieves up to 100x speedup. We also provide theoretical analysis showing that the quantum advantage holds for certain problem classes under realistic noise conditions. This work represents a significant step toward practical quantum advantage in machine learning.",
+      "url": "https://arxiv.org/abs/2401.12347",
+      "publishedAt": "2024-01-14T11:45:00Z",
+      "field": "ai-computing",
+      "subfield": "Quantum Computing",
+      "tags": ["quantum-computing", "quantum-ml", "quantum-algorithms", "machine-learning", "quantum-advantage"],
+      "topics": ["quantum machine learning", "quantum advantage", "high-dimensional optimization", "quantum chemistry", "quantum hardware"],
+      "quality": "significant",
+      "relevanceScore": 90,
+      "impactScore": 88,
+      "qualityScore": 85,
+      "noveltyScore": 87,
+      "openAccess": true,
+      "arxivId": "2401.12347",
+      "summary": "IBM Quantum and Google Quantum AI demonstrated quantum ML algorithms with up to 100x speedup on 127-qubit hardware for specific problem classes.",
+      "keyFindings": [
+        "Exponential speedup on specific problem classes",
+        "Successful implementation on 127-qubit quantum hardware",
+        "100x speedup on quantum mechanical data",
+        "Advantage holds under realistic noise conditions"
+      ],
+      "methodology": "Quantum algorithm design, hardware implementation, benchmark testing, theoretical analysis",
+      "limitations": "Limited to specific problem classes, quantum hardware noise sensitivity, scalability challenges remain",
+      "whyThisMatters": "This demonstrates practical quantum advantage in machine learning, showing that quantum computers can outperform classical methods on real-world problems, not just theoretical constructs.",
+      "readingTime": 7,
+      "source": "arxiv",
+      "fetchedAt": "2024-01-18T10:00:00Z",
+      "processedAt": "2024-01-18T10:05:00Z",
+      "processingStatus": "completed",
+      "relatedArticles": [],
+      "citationContext": "This quantum ML work has been referenced by 6 subsequent quantum computing papers",
+      "isMockData": true,
+      "mockDataSource": "arxiv-ai-fixture"
+    }
+  ]
+}

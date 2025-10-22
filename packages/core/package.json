@@ -1,0 +1,58 @@
+{
+  "name": "@bite-size-academic/core",
+  "version": "0.1.0",
+  "description": "Core business logic and shared utilities for Bite Size Academic",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest --coverage",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist",
+    "job:weekly": "tsx src/jobs/weekly-digest.ts",
+    "job:weekly:mock": "tsx src/jobs/weekly-digest.ts --field=life-sciences",
+    "job:weekly:ai": "tsx src/jobs/weekly-digest.ts --field=ai-computing",
+    "seed:fixtures": "tsx src/scripts/seed-fixtures.ts",
+    "validate-fixtures": "tsx src/scripts/validate-fixtures.ts"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-release.1",
+    "date-fns": "^3.3.1",
+    "dotenv": "^16.6.1",
+    "nanoid": "^5.0.4",
+    "node-cron": "^3.0.3",
+    "rss-parser": "^3.13.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/cheerio": "^0.22.35",
+    "@types/node": "^20.11.5",
+    "@types/node-cron": "^3.0.11",
+    "@typescript-eslint/eslint-plugin": "^6.19.1",
+    "@typescript-eslint/parser": "^6.19.1",
+    "@vitest/coverage-v8": "^1.2.1",
+    "eslint": "^8.56.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.1"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "keywords": [
+    "academic",
+    "research",
+    "digest",
+    "content",
+    "curation"
+  ],
+  "author": "Bite Size Academic Team",
+  "license": "MIT"
+}

@@ -1,0 +1,79 @@
+{
+  "name": "bite-size-academic",
+  "version": "0.1.0",
+  "description": "Email-first academic subscription service with mock podcast generation",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "setup": "node setup.js",
+    "install": "npm install",
+    "dev": "concurrently \"npm run dev:core\" \"npm run dev:web\"",
+    "dev:core": "cd packages/core && npm run dev",
+    "dev:web": "cd apps/web && npm run dev",
+    "build": "npm run build:core && npm run build:web",
+    "build:core": "cd packages/core && npm run build",
+    "build:web": "cd apps/web && npm run build",
+    "start": "concurrently \"npm run start:core\" \"npm run start:web\"",
+    "start:core": "cd packages/core && npm start",
+    "start:web": "cd apps/web && npm start",
+    "test": "npm run test:core && npm run test:web",
+    "test:core": "cd packages/core && npm test",
+    "test:web": "cd apps/web && npm test",
+    "test:e2e": "cd apps/web && npm run test:e2e",
+    "lint": "npm run lint:core && npm run lint:web",
+    "lint:core": "cd packages/core && npm run lint",
+    "lint:web": "cd apps/web && npm run lint",
+    "type-check": "npm run type-check:core && npm run type-check:web",
+    "type-check:core": "cd packages/core && npm run type-check",
+    "type-check:web": "cd apps/web && npm run type-check",
+    "job:weekly": "cd packages/core && npm run job:weekly --mock",
+    "job:weekly:ai": "cd packages/core && npm run job:weekly --field=ai-computing --mock",
+    "job:weekly:life-sciences": "cd packages/core && npm run job:weekly --field=life-sciences --mock",
+    "seed:fixtures": "cd packages/core && npm run seed:fixtures",
+    "clean": "npm run clean:core && npm run clean:web",
+    "clean:core": "cd packages/core && npm run clean",
+    "clean:web": "cd apps/web && npm run clean",
+    "docker:build": "docker build -t bite-size-academic .",
+    "docker:run": "docker run -p 3000:3000 bite-size-academic"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "@typescript-eslint/eslint-plugin": "^6.19.1",
+    "@typescript-eslint/parser": "^6.19.1",
+    "concurrently": "^8.2.2",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "prettier": "^3.2.4",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.1"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=9.0.0"
+  },
+  "packageManager": "npm@9.8.1",
+  "keywords": [
+    "academia",
+    "research",
+    "email",
+    "podcast",
+    "subscription",
+    "digest",
+    "scholarly",
+    "summarization"
+  ],
+  "author": "Bite Size Academic Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bite-size-academic/bite-size-academic.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bite-size-academic/bite-size-academic/issues"
+  },
+  "homepage": "https://bite-size-academic.com"
+}
