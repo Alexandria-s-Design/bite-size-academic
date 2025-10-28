@@ -1,0 +1,381 @@
+// Bite Size Academic - Database Schema
+// PostgreSQL with Prisma ORM
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// USER MANAGEMENT
+// ============================================================================
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  emailVerified DateTime? @map("email_verified")
+  passwordHash  String?   @map("password_hash")
+  name          String?
+
+  // Preferences
+  field              String   @default("life-sciences")
+  subfieldInterests  String[] @map("subfield_interests")
+  tags               String[]
+
+  // Subscription
+  subscriptionTier   String   @default("free") @map("subscription_tier") // free, premium, enterprise
+  subscriptionStatus String   @default("active") @map("subscription_status") // active, cancelled, expired, trial
+  stripeCustomerId   String?  @unique @map("stripe_customer_id")
+  stripeSubscriptionId String? @unique @map("stripe_subscription_id")
+  subscriptionStartsAt DateTime? @map("subscription_starts_at")
+  subscriptionEndsAt   DateTime? @map("subscription_ends_at")
+  trialEndsAt          DateTime? @map("trial_ends_at")
+
+  // Communication
+  deliveryDay  String  @default("friday") @map("delivery_day")
+  deliveryTime String  @default("10:00") @map("delivery_time")
+  timezone     String  @default("UTC")
+  optOut       Boolean @default(false) @map("opt_out")
+
+  // Engagement
+  totalDigestsReceived Int       @default(0) @map("total_digests_received")
+  totalDigestsOpened   Int       @default(0) @map("total_digests_opened")
+  totalClicks          Int       @default(0) @map("total_clicks")
+  lastOpenedAt         DateTime? @map("last_opened_at")
+  lastClickedAt        DateTime? @map("last_clicked_at")
+
+  // Admin
+  role     String  @default("user") // user, admin, moderator
+  isActive Boolean @default(true) @map("is_active")
+  notes    String?
+
+  // Timestamps
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  lastLoginAt DateTime? @map("last_login_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  // Relations
+  subscriptions    Subscription[]
+  emailLogs        EmailLog[]
+  analyticsEvents  AnalyticsEvent[]
+  curatedArticles  Article[]        @relation("CuratedBy")
+  createdDigests   Digest[]         @relation("CreatedBy")
+  sessions         Session[]
+
+  @@index([email])
+  @@index([subscriptionStatus])
+  @@index([stripeCustomerId])
+  @@map("users")
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+model VerificationToken {
+  id         String   @id @default(uuid())
+  identifier String // email or user id
+  token      String   @unique
+  type       String // email-verification, password-reset
+  expires    DateTime
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@unique([identifier, token])
+  @@index([token])
+  @@map("verification_tokens")
+}
+
+// ============================================================================
+// SUBSCRIPTION & PAYMENT
+// ============================================================================
+
+model Subscription {
+  id       String @id @default(uuid())
+  userId   String @map("user_id")
+
+  // Stripe data
+  stripeSubscriptionId String  @unique @map("stripe_subscription_id")
+  stripePriceId        String  @map("stripe_price_id")
+  stripeCustomerId     String  @map("stripe_customer_id")
+
+  // Subscription details
+  tier   String // free, premium, enterprise
+  status String // active, cancelled, past_due, unpaid
+
+  // Billing
+  currentPeriodStart  DateTime  @map("current_period_start")
+  currentPeriodEnd    DateTime  @map("current_period_end")
+  cancelAtPeriodEnd   Boolean   @default(false) @map("cancel_at_period_end")
+  cancelledAt         DateTime? @map("cancelled_at")
+
+  // Pricing
+  amount   Int    // in cents
+  currency String @default("usd")
+  interval String // month, year
+
+  // Trial
+  trialStart DateTime? @map("trial_start")
+  trialEnd   DateTime? @map("trial_end")
+
+  // Metadata
+  metadata  Json?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([stripeSubscriptionId])
+  @@index([status])
+  @@map("subscriptions")
+}
+
+// ============================================================================
+// CONTENT MANAGEMENT
+// ============================================================================
+
+model Article {
+  id       String   @id @default(uuid())
+
+  // Basic info
+  title       String
+  authors     Json // array of author objects
+  venue       String?
+  venueType   String? @map("venue_type") // journal, conference, preprint
+  abstract    String?
+  url         String
+  publishedAt DateTime @map("published_at")
+
+  // Classification
+  field    String
+  subfield String?
+  tags     String[]
+  topics   String[]
+
+  // Scoring
+  quality        String? // breakthrough, significant, important
+  relevanceScore Int?    @map("relevance_score")
+  impactScore    Int?    @map("impact_score")
+  qualityScore   Int?    @map("quality_score")
+  noveltyScore   Int?    @map("novelty_score")
+
+  // Access
+  openAccess Boolean @default(false) @map("open_access")
+  doi        String?
+  arxivId    String? @map("arxiv_id")
+  pubmedId   String? @map("pubmed_id")
+
+  // Content analysis
+  summary        String?
+  keyFindings    String[] @map("key_findings")
+  methodology    String?
+  limitations    String?
+  whyThisMatters String?  @map("why_this_matters")
+  readingTime    Int?     @map("reading_time")
+
+  // Source
+  source           String
+  fetchedAt        DateTime  @map("fetched_at")
+  processedAt      DateTime? @map("processed_at")
+  processingStatus String    @map("processing_status")
+
+  // Curation
+  curatedById String?  @map("curated_by_id")
+  approved    Boolean  @default(false)
+  featured    Boolean  @default(false)
+
+  // Metadata
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  // Relations
+  curatedBy User?   @relation("CuratedBy", fields: [curatedById], references: [id])
+  digests   Digest[] @relation("DigestArticles")
+
+  @@index([field])
+  @@index([publishedAt(sort: Desc)])
+  @@index([quality])
+  @@index([approved])
+  @@map("articles")
+}
+
+model Digest {
+  id          String   @id @default(uuid())
+
+  // Details
+  field       String
+  weekNumber  Int      @map("week_number")
+  year        Int
+  publishedAt DateTime @map("published_at")
+
+  // Content
+  introduction String
+  conclusion   String?
+
+  // Quality metrics
+  totalArticles         Int     @map("total_articles")
+  averageRelevanceScore Decimal @map("average_relevance_score") @db.Decimal(5, 2)
+  averageQualityScore   Decimal @map("average_quality_score") @db.Decimal(5, 2)
+
+  // Processing
+  processedAt       DateTime? @map("processed_at")
+  processingDuration Int?     @map("processing_duration")
+  processingStatus  String    @map("processing_status")
+
+  // Delivery
+  sentAt        DateTime? @map("sent_at")
+  deliveryCount Int       @default(0) @map("delivery_count")
+  openCount     Int       @default(0) @map("open_count")
+  clickCount    Int       @default(0) @map("click_count")
+
+  // Metadata
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  createdById String?  @map("created_by_id")
+
+  // Relations
+  createdBy  User?      @relation("CreatedBy", fields: [createdById], references: [id])
+  articles   Article[]  @relation("DigestArticles")
+  emailLogs  EmailLog[]
+
+  @@unique([field, weekNumber, year])
+  @@index([field])
+  @@index([publishedAt(sort: Desc)])
+  @@map("digests")
+}
+
+// ============================================================================
+// EMAIL & COMMUNICATION
+// ============================================================================
+
+model EmailLog {
+  id       String @id @default(uuid())
+
+  // Recipients
+  userId   String? @map("user_id")
+  digestId String? @map("digest_id")
+
+  // Email details
+  templateType String @map("template_type")
+  subject      String
+  fromEmail    String @map("from_email")
+  toEmail      String @map("to_email")
+
+  // Status
+  status     String  @default("pending") // pending, sent, delivered, opened, clicked, bounced, failed
+  externalId String? @map("external_id")
+
+  // Tracking
+  sentAt       DateTime? @map("sent_at")
+  deliveredAt  DateTime? @map("delivered_at")
+  openedAt     DateTime? @map("opened_at")
+  firstClickAt DateTime? @map("first_click_at")
+  openCount    Int       @default(0) @map("open_count")
+  clickCount   Int       @default(0) @map("click_count")
+
+  // Errors
+  errorMessage String? @map("error_message")
+  bounceReason String? @map("bounce_reason")
+
+  // Metadata
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user   User?   @relation(fields: [userId], references: [id])
+  digest Digest? @relation(fields: [digestId], references: [id])
+
+  @@index([userId])
+  @@index([status])
+  @@index([sentAt(sort: Desc)])
+  @@map("email_logs")
+}
+
+// ============================================================================
+// ANALYTICS
+// ============================================================================
+
+model AnalyticsEvent {
+  id        String @id @default(uuid())
+
+  // Event
+  eventType String @map("event_type")
+  userId    String? @map("user_id")
+  sessionId String? @map("session_id")
+
+  // Context
+  eventData Json?   @map("event_data")
+  userAgent String? @map("user_agent")
+  ipAddress String? @map("ip_address")
+  referrer  String?
+  pageUrl   String? @map("page_url")
+
+  // Timestamp
+  timestamp DateTime @default(now())
+
+  // Metadata
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([eventType])
+  @@index([userId])
+  @@index([timestamp(sort: Desc)])
+  @@map("analytics_events")
+}
+
+// ============================================================================
+// BACKGROUND JOBS
+// ============================================================================
+
+model BackgroundJob {
+  id       String @id @default(uuid())
+
+  // Job details
+  jobType String @map("job_type") // weekly-digest, content-fetch, email-delivery
+  status  String @default("pending") // pending, running, completed, failed, cancelled
+
+  // Configuration
+  config     Json?
+  parameters Json?
+
+  // Timing
+  scheduledAt DateTime  @map("scheduled_at")
+  startedAt   DateTime? @map("started_at")
+  completedAt DateTime? @map("completed_at")
+  duration    Int?      // in milliseconds
+
+  // Results
+  result Json?
+  error  String?
+
+  // Retry
+  retryCount  Int       @default(0) @map("retry_count")
+  maxRetries  Int       @default(3) @map("max_retries")
+  nextRetryAt DateTime? @map("next_retry_at")
+
+  // Metadata
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([jobType])
+  @@index([status])
+  @@index([scheduledAt])
+  @@map("background_jobs")
+}
