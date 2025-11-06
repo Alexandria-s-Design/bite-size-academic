@@ -150,6 +150,10 @@ export class WeeklyDigestJob {
     const weekInfo = getCurrentWeekInfo()
     const digestId = generateDigestId(field, weekInfo.weekNumber, weekInfo.year)
 
+    // Initialize warnings and artifacts collections
+    const warnings: string[] = []
+    const artifacts: Record<string, any> = {}
+
     logger.info(`Processing field: ${field}`, {
       digestId,
       weekNumber: weekInfo.weekNumber,
@@ -217,8 +221,8 @@ export class WeeklyDigestJob {
       // 4. Validate digest
       const validation = await this.digestComposer.validateDigestComposition(composedDigest)
       if (!validation.valid) {
-        const warnings = validation.issues.map(issue => `Validation: ${issue}`)
-        warnings.push(...warnings)
+        const validationWarnings = validation.issues.map(issue => `Validation: ${issue}`)
+        warnings.push(...validationWarnings)
         logger.warn('Digest validation warnings', { digestId, warnings })
       }
 
@@ -451,7 +455,7 @@ export class WeeklyDigestJob {
     emailSent?: boolean
   }> {
     const job = new WeeklyDigestJob()
-    return await job.execute(options)
+    return await job.run(options)
   }
 
   static async runFromCLI(): Promise<void> {

@@ -29,6 +29,7 @@ export interface DeliveryResult {
   deliveredAt?: Date
   error?: string
   metadata?: Record<string, any>
+  localFilePath?: string
 }
 
 export class EmailService {
@@ -151,7 +152,7 @@ export class EmailService {
 
     try {
       const template = await this.generatePreferenceUpdateTemplate(user)
-      const deliveryOptions: EmailEmailOptions = {
+      const deliveryOptions: EmailDeliveryOptions = {
         userId: user.id,
         templateId: template.id,
         personalizationData: {
@@ -237,8 +238,8 @@ export class EmailService {
       emailId,
       externalId: emailContent.externalId,
       deliveredAt: emailContent.deliveredAt,
+      localFilePath: emailContent.localFilePath,
       metadata: {
-        localFilePath: emailContent.localFilePath,
         deliveryTime: emailContent.deliveredAt,
       },
     }
