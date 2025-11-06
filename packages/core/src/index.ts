@@ -23,6 +23,9 @@ export * from './podcast/podcast-service'
 
 // Services
 export * from './services/admin-service'
+export * from './services/health-check-service'
+export * from './services/validation-service'
+export * from './services/user-preferences-service'
 
 // Jobs
 export * from './jobs/weekly-digest'
