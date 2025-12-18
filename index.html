@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Stay current with academic research without the information overload. Weekly curated digests of cutting-edge research in 15 minutes.">
+    <title>Bite Size Academic - Stay Current in 15 Minutes Per Week</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Georgia:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --brand-blue: #1e3a8a;
+            --insight-teal: #0891b2;
+            --wisdom-gray: #374151;
+            --light-gray: #f9fafb;
+            --border-gray: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: var(--wisdom-gray);
+            background: linear-gradient(135deg, #eff6ff 0%, #ffffff 50%, #f0fdfa 100%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-gray);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+        }
+
+        .logo-text h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .logo-text p {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: #6b7280;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: #111827;
+        }
+
+        .btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: inline-block;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--brand-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1e40af;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+        }
+
+        .btn-outline {
+            border: 2px solid var(--brand-blue);
+            color: var(--brand-blue);
+            background: white;
+        }
+
+        .btn-outline:hover {
+            background: var(--brand-blue);
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 5rem 0;
+            text-align: center;
+        }
+
+        .hero h2 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            color: #111827;
+        }
+
+        .hero .highlight {
+            color: var(--brand-blue);
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: #6b7280;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6b7280;
+        }
+
+        /* Field Selector */
+        .field-selector {
+            max-width: 900px;
+            margin: 3rem auto;
+        }
+
+        .field-selector h3 {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #111827;
+        }
+
+        .fields-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .field-card {
+            background: white;
+            border: 2px solid var(--border-gray);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .field-card:hover {
+            border-color: var(--brand-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(30, 58, 138, 0.1);
+        }
+
+        .field-card.selected {
+            border-color: var(--brand-blue);
+            background: #eff6ff;
+        }
+
+        .field-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .field-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #111827;
+        }
+
+        .field-description {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        /* Signup Form */
+        .signup-form {
+            max-width: 500px;
+            margin: 2rem auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border-gray);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--brand-blue);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 5rem 0;
+            background: white;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #111827;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            text-align: center;
+        }
+
+        .feature-icon {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+        }
+
+        .feature-icon.blue { background: rgba(30, 58, 138, 0.1); }
+        .feature-icon.green { background: rgba(16, 185, 129, 0.1); }
+        .feature-icon.purple { background: rgba(139, 92, 246, 0.1); }
+        .feature-icon.amber { background: rgba(245, 158, 11, 0.1); }
+
+        .feature-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #111827;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 5rem 0;
+            background: var(--light-gray);
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .step {
+            text-align: center;
+        }
+
+        .step-number {
+            width: 5rem;
+            height: 5rem;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid var(--brand-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--brand-blue);
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2);
+        }
+
+        .step-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: #111827;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, var(--brand-blue) 0%, var(--insight-teal) 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .btn-white {
+            background: white;
+            color: var(--brand-blue);
+        }
+
+        .btn-white:hover {
+            background: var(--light-gray);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            background: #111827;
+            color: white;
+            padding: 3rem 0 2rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-brand h3 {
+            font-size: 1.25rem;
+        }
+
+        .footer-links h4 {
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #374151;
+            padding-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h2 {
+                font-size: 2rem;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">
+                    <span class="logo-icon">🧬</span>
+                    <div class="logo-text">
+                        <h1>Bite Size Academic</h1>
+                        <p>Stay current in 15 minutes per week</p>
+                    </div>
+                </a>
+                <nav>
+                    <a href="#features">Features</a>
+                    <a href="#how-it-works">How It Works</a>
+                    <a href="#pricing">Premium</a>
+                    <a href="#" class="btn btn-outline">Sign In</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h2>
+                Stay Current with<br>
+                <span class="highlight">Academic Research</span><br>
+                Without the Overwhelm
+            </h2>
+            <p class="hero-subtitle">
+                Get weekly curated digests of 3-5 cutting-edge research papers in your field.
+                Each summary includes key findings, context, and why it matters—delivered in
+                under 15 minutes of reading time.
+            </p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span>👥</span>
+                    <span>1,000+ academics</span>
+                </div>
+                <div class="stat">
+                    <span>✓</span>
+                    <span>Free forever</span>
+                </div>
+                <div class="stat">
+                    <span>⏱️</span>
+                    <span>15 min/week</span>
+                </div>
+            </div>
+
+            <!-- Field Selector -->
+            <div class="field-selector">
+                <h3>Choose Your Academic Field</h3>
+                <div class="fields-grid">
+                    <div class="field-card" data-field="life-sciences">
+                        <div class="field-icon">🧬</div>
+                        <div class="field-title">Life Sciences</div>
+                        <div class="field-description">Genetics, neuroscience, immunology, biomedical research</div>
+                    </div>
+                    <div class="field-card" data-field="ai-computing">
+                        <div class="field-icon">🤖</div>
+                        <div class="field-title">AI & Computing</div>
+                        <div class="field-description">Machine learning, NLP, computer vision, algorithms</div>
+                    </div>
+                    <div class="field-card" data-field="humanities">
+                        <div class="field-icon">📚</div>
+                        <div class="field-title">Humanities & Culture</div>
+                        <div class="field-description">History, philosophy, linguistics, cultural studies</div>
+                    </div>
+                    <div class="field-card" data-field="policy">
+                        <div class="field-icon">🏛️</div>
+                        <div class="field-title">Policy & Governance</div>
+                        <div class="field-description">Public policy, economics, legal studies, ethics</div>
+                    </div>
+                    <div class="field-card" data-field="climate">
+                        <div class="field-icon">🌍</div>
+                        <div class="field-title">Climate & Earth Systems</div>
+                        <div class="field-description">Climate science, sustainability, ecology, oceanography</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Signup Form -->
+            <div class="signup-form">
+                <form id="signupForm">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="you@university.edu" required>
+                    </div>
+                    <input type="hidden" id="selectedField" name="field">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        Get Started Free →
+                    </button>
+                    <p style="text-align: center; font-size: 0.875rem; color: #6b7280; margin-top: 1rem;">
+                        No credit card required • Cancel anytime
+                    </p>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Everything You Need to Stay Current</h2>
+                <p>We handle the information overload so you can focus on what matters most in your research.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon blue">✓</div>
+                    <div class="feature-title">Expertly Curated</div>
+                    <p>Our team selects the most important papers from top journals and preprint servers.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon green">⏱️</div>
+                    <div class="feature-title">Time Efficient</div>
+                    <p>Get up to speed in just 15 minutes per week with reading time estimates.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon purple">👥</div>
+                    <div class="feature-title">Field Specific</div>
+                    <p>Choose from 5 academic fields to get content tailored to your interests.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon amber">🎧</div>
+                    <div class="feature-title">Audio Available</div>
+                    <p>Premium subscribers get weekly podcast episodes for listening on the go.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2>How It Works</h2>
+                <p>Getting started with Bite Size Academic takes less than 2 minutes.</p>
+            </div>
+            <div class="steps-grid">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Choose Your Field</div>
+                    <p>Select from Life Sciences, AI & Computing, Humanities & Culture, Policy & Governance, or Climate & Earth Systems.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Confirm Your Email</div>
+                    <p>Check your email for a confirmation link to activate your subscription.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Receive Weekly Digests</div>
+                    <p>Get your curated email digest every Friday with the latest research in your field.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to Stay Current Without the Overwhelm?</h2>
+            <p>Join thousands of academics who trust Bite Size Academic to keep them informed.</p>
+            <a href="#" class="btn btn-white btn-lg">Start Your Free Subscription →</a>
+            <p style="margin-top: 1rem; opacity: 0.9;">No credit card required • Cancel anytime • Always free</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-brand">
+                        <span style="font-size: 2rem;">🧬</span>
+                        <div>
+                            <h3>Bite Size Academic</h3>
+                            <p style="font-size: 0.875rem; color: #9ca3af;">Stay current in 15 minutes per week</p>
+                        </div>
+                    </div>
+                    <p style="color: #9ca3af; max-width: 400px;">
+                        We help academics stay current with cutting-edge research without the information overload.
+                        Curated weekly digests delivered to your inbox.
+                    </p>
+                </div>
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#pricing">Premium</a></li>
+                        <li><a href="#fields">Academic Fields</a></li>
+                        <li><a href="#api">API</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#blog">Blog</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p style="color: #9ca3af; font-size: 0.875rem;">
+                    © 2024 Bite Size Academic. All rights reserved.
+                </p>
+                <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                    <a href="#privacy" style="color: #9ca3af; text-decoration: none; font-size: 0.875rem;">Privacy Policy</a>
+                    <a href="#terms" style="color: #9ca3af; text-decoration: none; font-size: 0.875rem;">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Field selection
+        const fieldCards = document.querySelectorAll('.field-card');
+        const selectedFieldInput = document.getElementById('selectedField');
+
+        fieldCards.forEach(card => {
+            card.addEventListener('click', () => {
+                fieldCards.forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                selectedFieldInput.value = card.dataset.field;
+            });
+        });
+
+        // Form submission
+        document.getElementById('signupForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const field = document.getElementById('selectedField').value;
+
+            if (!field) {
+                alert('Please select an academic field first.');
+                return;
+            }
+
+            // Simulate signup (replace with actual API call)
+            alert(`Thank you for signing up!\n\nEmail: ${email}\nField: ${field}\n\nCheck your email for a confirmation link.`);
+
+            // Reset form
+            document.getElementById('signupForm').reset();
+            fieldCards.forEach(c => c.classList.remove('selected'));
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href === '#') return;
+
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
